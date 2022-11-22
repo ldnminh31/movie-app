@@ -2,6 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const movieController = require("./controllers/movie.controller");
+const accountController = require("./controllers/account.controller");
+const categoryController = require("./controllers/category.controller");
+const commentController = require("./controllers/comment.controller")
+
 const ApiError = require("./api-error");
 
 app.use(cors());
@@ -12,43 +16,43 @@ app.get("/", (req, res) => {
   });
 });
 // user api
-app.route("/api/auth/signin").post(movieController.signIn);
+app.route("/api/auth/signin").post(accountController.signIn);
 
-app.route("/api/auth/signup").post(movieController.signUp);
+app.route("/api/auth/signup").post(accountController.signUp);
 
-app.route("/api/auth/signout").post(movieController.signOut);
+app.route("/api/auth/signout").post(accountController.signOut);
 
 // movie api
-app.route("/api/movie").get(movieController.all).post(movieController.addFilm);
+app.route("/api/movie").get(movieController.all).post(movieController.addMovie);
 
 app
-  .route("/api/movie/:id")
-  .get(movieController.findFilm)
-  .put(movieController.updateFilm)
-  .delete(movieController.deleteFilm);
+  .route("/api/movie/:movie_id")
+  .get(movieController.findMovieId)
+  .put(movieController.updateMovie)
+  .delete(movieController.deleteMovie);
 
 // category api
 app
   .route("/api/category")
-  .get(movieController.category)
-  .post(movieController.addCat);
+  .get(categoryController.category)
+  .post(categoryController.addCategory);
 
 app
-  .route("/api/category/:id")
-  .get(movieController.findCat) //not find Cat :)
-  .put(movieController.updateCat)
-  .delete(movieController.deleteCat);
+  .route("/api/category/:category_id")
+  .get(categoryController.findCategory)
+  .put(categoryController.updateCategory)
+  .delete(categoryController.deleteCategory);
 
 // comment api
 app
   .route("/api/comment")
-  .get(movieController.comment)
-  .post(movieController.addCom);
+  .get(commentController.comment)
+  .post(commentController.addComment);
 
 app
-  .route("/api/comment/:id")
-  .put(movieController.updateCom)
-  .delete(movieController.deleteCom);
+  .route("/api/comment/:comment_id")
+  .put(commentController.updateComment)
+  .delete(commentController.deleteComment);
 
 //   handle 404 respone
 app.use((req, res, next) => {
