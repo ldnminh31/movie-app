@@ -28,14 +28,20 @@ class CommentService {
     const [comment_id] = await this.comments.insert(comment);
     return { comment_id, ...comment };
   }
-  async comment() {
-    return await this.comments.select("*");
+  async comment(id) {
+    return await this.comments
+      .join("accounts", "accounts.user_id", "=", "comments.user_id")
+      .join("movies", "movies.movie_id", "=", "comments.movie_id")
+      .where("movies.movie_id", id)
+      .select("*");
   }
+
   async findByContent(content) {
     return await this.comments
       .where("content", "like", `%${content}%`)
       .select("*");
   }
+
   async updateComment(comment_id, payload) {
     const update = this.#getComment(payload);
     return await this.comments.where("comment_id", comment_id).update(update);

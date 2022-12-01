@@ -8,7 +8,12 @@ class MovieService {
 
   #getMovie(payload) {
     const movie = { ...payload };
-    const movieProperties = ["movie_name", "image", "description", "cat_id"];
+    const movieProperties = [
+      "movie_name",
+      "image",
+      "description",
+      "category_id",
+    ];
     // remove non-movies properties
     Object.keys(movie).forEach(function (key) {
       if (movieProperties.indexOf(key) == -1) {
@@ -20,18 +25,15 @@ class MovieService {
 
   // ----------- Movie --------------
 
-  // async addMovie(payload) {
-  //   const movie = this.#getMovie(payload);
-  //   const [movie_id] = await this.movies.insert(movie);
-  //   return { movie_id, ...movie };
-  // }
   async addMovie(payload) {
     const movie = this.#getMovie(payload);
     const [movie_id] = await this.movies.insert(movie);
     return { movie_id, ...movie };
   }
   async all() {
-    return await this.movies.select("*");
+    return await this.movies
+      .join("category", "movies.category_id", "=", "category.category_id")
+      .select("*");
   }
   async findByMovieName(movie_name) {
     return await this.movies
@@ -39,7 +41,11 @@ class MovieService {
       .select("*");
   }
   async findByMovieId(movie_id) {
-    return await this.movies.where("movie_id", movie_id).select("*").first();
+    return await this.movies
+      .join("category", "movies.category_id", "=", "category.category_id")
+      .where("movie_id", movie_id)
+      .select("*")
+      .first();
   }
   async updateMovie(movie_id, payload) {
     const update = this.#getMovie(payload);
