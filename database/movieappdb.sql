@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Dec 01, 2022 at 07:11 PM
+-- Generation Time: Dec 01, 2022 at 07:46 PM
 -- Server version: 5.7.34
 -- PHP Version: 7.4.21
 
@@ -40,14 +40,16 @@ CREATE TABLE `accounts` (
 --
 
 INSERT INTO `accounts` (`user_id`, `username`, `password`, `phone`, `role`) VALUES
-(1, 'admin', 'admin', '', 0),
+(1, 'admin', 'admin', '0705059984', 0),
 (2, 'ldnminh', '123', '', 1),
-(3, 'lak', '123', '', 0),
-(6, 'messi', 'messi', '', 0),
-(7, 'ronaldo', 'ronaldo', '', 0),
-(8, 'tonicr8s', '8nghiep', '', 0),
-(9, 'jenny', 'jenny', '', 0),
-(10, 'test', 'test', '', 0);
+(3, 'lak', '123', '', 1),
+(6, 'messi', 'messi', '', 1),
+(7, 'ronaldo', 'ronaldo', '', 1),
+(8, 'tonicr8s', '8nghiep', '', 1),
+(9, 'jenny', 'jenny', '', 1),
+(10, 'test', 'test', '', 1),
+(11, 'test1', 'test1', '0700009999', 1),
+(12, 'test2', 'test2', '', 1);
 
 -- --------------------------------------------------------
 
@@ -201,7 +203,7 @@ ALTER TABLE `movies`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `user_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `user_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `category`
@@ -213,7 +215,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `comment_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `movies`
