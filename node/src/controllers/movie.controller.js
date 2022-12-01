@@ -1,6 +1,39 @@
 const MovieService = require("../services/movie.service");
 const ApiError = require("../api-error");
 
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/");
+  },
+  filename: function (req, file, cb) {
+    const mimeExtension = {
+      "image/jpeg": ".jpeg",
+      "image/jpg": ".jpg",
+      "image/png": ".png",
+      "image/gif": ".gif",
+    };
+    cb(null, file.fieldname + "-" + Date.now() + mimeExtension[file.mimetype]);
+  },
+});
+
+exports.uploadAvatar = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype === "image/jpeg" ||
+      file.mimetype === "image/jpg" ||
+      file.mimetype === "image/png" ||
+      file.mimetype === "image/gif"
+    ) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      req.fileError = "File format is not valid";
+    }
+  },
+});
+
 // ---------- Movie controller -------------
 // add new Movie/movie
 exports.addMovie = async (req, res, next) => {
@@ -9,7 +42,13 @@ exports.addMovie = async (req, res, next) => {
   }
   try {
     const movieService = new MovieService();
-    const movie = await movieService.addMovie(req.body);
+    const data = {
+      movie_name: req.body.movie_name,
+      image: req.file.filename,
+      description: req.body.description,
+      category_id: req.body.category_id,
+    };
+    const movie = await movieService.addMovie(data);
     return res.send(movie);
   } catch (error) {
     console.log(error);
@@ -61,9 +100,8 @@ exports.findMovieName = async (req, res, next) => {
     const movie = await movieService.findByMovieName(req.params.movie_name);
     if (!movie) {
       return next(new ApiError(404, "Movie not foundddd"));
-    }
-    else{
-      res.send(movie)
+    } else {
+      res.send(movie);
     }
   } catch {
     console.log(error);
@@ -81,10 +119,25 @@ exports.updateMovie = async (req, res, next) => {
     return next(new ApiError(400, "Data to update can not be empty"));
   }
   try {
+    var data = {};
+    if (req.file != null) {
+      data = {
+        movie_name: req.body.movie_name,
+        image: req.file.filename,
+        description: req.body.description,
+        category_id: req.body.category_id,
+      };
+    } else {
+      data = {
+        movie_name: req.body.movie_name,
+        description: req.body.description,
+        category_id: req.body.category_id,
+      };
+    }
     const movieService = new MovieService();
     const movieUpdated = await movieService.updateMovie(
       req.params.movie_id,
-      req.body
+      data
     );
     if (!movieUpdated) {
       return next(new ApiError(404, "movie not found"));

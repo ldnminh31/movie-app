@@ -5,7 +5,7 @@
         class="col-3"
         v-for="movie in movies"
         :key="movie.movie_id"
-        style="margin-top: 50px; cursor: pointer;"
+        style="margin-top: 50px"
       >
         <!-- <h5>ID: {{ movies.length() }}</h5> -->
         <div class="jumbotron text-center movie-card">
@@ -13,7 +13,7 @@
           <div class="text-center" style="margin-bottom: 10px">
             <img
               @click="goToDetails(movie.movie_id)"
-              src="https://api.lorem.space/image/movie?w=150&h=220"
+              :src="movie.image"
               alt=""
             />
             <!-- {{item.image}} -->
@@ -64,9 +64,6 @@ button.movie-name:hover {
 }
 </style>
 <script>
-import { movieService } from "@/services/movie.service";
-// import { toNumber } from "@vue/shared";
-
 export default {
   name: "MoviesList",
   components: {},

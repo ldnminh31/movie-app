@@ -3,20 +3,18 @@
   <SearchVue v-model="search" />
   <hr />
   <div class="container">
-    <div class="row" style="
+    <div
+      class="row"
+      style="
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         align-content: center;
-      ">
-      <div class="col-2">
+      "
+    >
+      <div class="col-1">
         <div class="text-center title">Movie</div>
-
       </div>
-      <!-- <div class="col-1">
-        <div class="text-center title">Movie</div>
-       
-      </div> -->
     </div>
   </div>
   <MovieListVue :movies="filteredMovies" />
@@ -55,19 +53,13 @@ export default {
       movies: [],
     };
   },
-  watch: {
-    search(old, nw){
-      console.log(nw)
-    }
-  },
   setup() {
     const mainStore = useMainStore();
-    return { mainStore }
+    return { mainStore };
   },
   methods: {
     async getMovies() {
       try {
-        console.log(this.mainStore.username);
         const moviesList = await movieService.getMany();
         this.movies = moviesList;
       } catch (error) {
@@ -97,6 +89,5 @@ export default {
   created() {
     this.refreshList();
   },
-
 };
 </script>

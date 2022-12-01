@@ -3,20 +3,15 @@
 
   <h2>Detail Movie</h2>
 
-  <div v-if="!loading" class="container" style="margin-top: 30px">
+  <div class="container" style="margin-top: 30px">
     <!-- detail -->
     <div class="row" style="margin-bottom: 30px">
       <div class="col md-8 text-center">
-        <img
-          style="width: 70%"
-          src="https://api.lorem.space/image/game"
-          alt=""
-        />
+        <img style="width: 70%" :src="dataMovie.image" alt="" />
       </div>
       <div class="col md-4">
         <div class="jumbotron">
           <h1 class="display-6">{{ dataMovie.name }}</h1>
-          <!-- <h5 class="card-title">Category: {{dataMovie.category_name}}</h5> -->
           <hr class="my-2" />
           <h5 class="card-title fw-bold">
             Category: {{ dataMovie.category_name }}
@@ -64,11 +59,16 @@
 
     <!-- comment list -->
     <div class="container" style="margin-top: 30px; margin-bottom: 30px">
-      <div class="row card" v-for="comment in comments" :key="comment.id" style="margin-bottom: 20px">
+      <div
+        class="row card"
+        v-for="comment in comments"
+        :key="comment.id"
+        style="margin-bottom: 20px"
+      >
         <div class="col md-2" style="padding: 20px">
           <div>
             <h6 class="fw-bold mb-1">{{ comment.username }}</h6>
-            <hr>
+            <hr />
             <div class="d-flex align-items-center mb-3">
               <p class="mb-0">{{ comment.comment_time }}</p>
 
@@ -101,15 +101,17 @@
 <style>
 .movie-card {
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  /* background-color: red; */
 }
+
 .movie-card:hover {
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }
+
 .movie-name {
   text-decoration: none;
   color: #497174;
 }
+
 .movie-name:hover {
   color: #eb6440;
 }
@@ -149,7 +151,6 @@ export default {
         addValue: "",
       },
       comments: [],
-      loading: 0
     };
   },
   created() {
@@ -159,18 +160,14 @@ export default {
   methods: {
     async getMovies() {
       try {
-        this.loading++;
         const moviesList = await movieService.get(this.id);
-        //console.log(moviesList);
         this.dataMovie.name = moviesList.movie_name;
         this.dataMovie.id = moviesList.movie_id;
         this.dataMovie.description = moviesList.description;
         this.dataMovie.category_name = moviesList.category_name;
-        this.loading--;
-        // console.log(this.dataMovie.name);
+        this.dataMovie.image = moviesList.image;
       } catch (error) {
         console.log(error);
-        this.loading--;
       }
     },
     getTime() {
@@ -197,7 +194,6 @@ export default {
     },
     async getComments() {
       try {
-        this.loading++;
         const commentsList = await commentService.get(this.id);
         const temparray = commentsList.map((item) => {
           let datetime = null;
@@ -215,16 +211,13 @@ export default {
           };
         });
         this.comments = temparray;
-        this.loading--;
-        // console.log(this.comments);
       } catch (error) {
         console.log(error);
-        this.loading--;
       }
     },
     async deleteComment(id) {
       try {
-        const commentsList = await commentService.deleteComment(id);
+        await commentService.deleteComment(id);
         this.getComments();
       } catch (error) {
         console.log(error);
@@ -233,14 +226,12 @@ export default {
     async addForm() {
       try {
         this.dataComment.content = this.addValue;
-        //  console.log(this.dataComment.content);
-        const commentsList = await commentService.addComment({
+        await commentService.addComment({
           user_id: this.mainStore.user_id,
           movie_id: this.id,
           comment_time: this.getTime(),
           content: this.dataComment.content,
         });
-        // alert("ok em nhas");
         this.addValue = "";
         this.getComments();
       } catch (error) {
@@ -250,14 +241,10 @@ export default {
     async editComment(id) {
       try {
         this.content = prompt("Enter your new comment: ");
-        if (!this.content)
-          return;
-        const commentsList = await commentService.updateComment(id, {
+        await commentService.updateComment(id, {
           comment_time: this.getTime(),
           content: this.content,
         });
-        // console.log(id);
-        // alert("okkk");
         this.getComments();
       } catch (error) {
         console.log(error);

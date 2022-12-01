@@ -1,10 +1,10 @@
-const { addMovie } = require("../controllers/movie.controller");
 const knex = require("../database/knex");
+const PORT = process.env.PORT;
+
 class MovieService {
   constructor() {
     this.movies = knex("movies");
   }
-  // Define methods for accessing the database
 
   #getMovie(payload) {
     const movie = { ...payload };
@@ -14,7 +14,6 @@ class MovieService {
       "description",
       "category_id",
     ];
-    // remove non-movies properties
     Object.keys(movie).forEach(function (key) {
       if (movieProperties.indexOf(key) == -1) {
         delete movie[key];
@@ -23,7 +22,7 @@ class MovieService {
     return movie;
   }
 
-  // ----------- Movie --------------
+  // ----------- Movie -----------
 
   async addMovie(payload) {
     const movie = this.#getMovie(payload);
@@ -31,31 +30,45 @@ class MovieService {
     return { movie_id, ...movie };
   }
   async all() {
-    return await this.movies
+    var movies = await this.movies
       .join("category", "movies.category_id", "=", "category.category_id")
       .select("*");
+    movies = movies.map((movie) => {
+      movie.image = `http://localhost:${PORT}/public/${movie.image}`;
+      return movie;
+    });
+    return movies;
   }
+
   async findByMovieName(movie_name) {
-    return await this.movies
+    var movies = await this.movies
       .where("movie_name", "like", `%${movie_name}%`)
       .select("*");
+    movies = movies.map((movie) => {
+      movie.image = `http://localhost:${PORT}/public/${movie.image}`;
+      return movie;
+    });
+    return movies;
   }
+
   async findByMovieId(movie_id) {
-    return await this.movies
+    var movie = await this.movies
       .join("category", "movies.category_id", "=", "category.category_id")
       .where("movie_id", movie_id)
       .select("*")
       .first();
+    movie.image = `http://localhost:${PORT}/public/${movie.image}`;
+    return movie;
   }
+
   async updateMovie(movie_id, payload) {
     const update = this.#getMovie(payload);
     return await this.movies.where("movie_id", movie_id).update(update);
   }
+
   async deleteMovie(movie_id) {
     return await this.movies.where("movie_id", movie_id).del();
   }
-
-  //
 }
 
 module.exports = MovieService;
