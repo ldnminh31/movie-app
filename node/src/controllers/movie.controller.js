@@ -43,13 +43,35 @@ exports.findMovieId = async (req, res, next) => {
     const movieService = new MovieService();
     const movie = await movieService.findByMovieId(req.params.movie_id);
     if (!movie) {
-      return next(new ApiError(404, "Movie not found"));
+      return next(new ApiError(404, "Hem co i=ai ddi"));
     }
     return res.send(movie);
   } catch (error) {
     console.log(error);
     return next(
       new ApiError(500, `Error retrieving movie with id=${req.params.movie_id}`)
+    );
+  }
+};
+// find movie with by name
+exports.findMovieName = async (req, res, next) => {
+  try {
+    const movieService = new MovieService();
+    // res.send (req.params.movie_name);
+    const movie = await movieService.findByMovieName(req.params.movie_name);
+    if (!movie) {
+      return next(new ApiError(404, "Movie not foundddd"));
+    }
+    else{
+      res.send(movie)
+    }
+  } catch {
+    console.log(error);
+    return next(
+      new ApiError(
+        500,
+        `Error retrieving movie with name=${req.params.movie_name}`
+      )
     );
   }
 };
@@ -98,5 +120,3 @@ exports.deleteMovie = async (req, res, next) => {
     );
   }
 };
-
-

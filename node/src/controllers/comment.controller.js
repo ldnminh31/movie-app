@@ -22,12 +22,7 @@ exports.comment = async (req, res, next) => {
   let comments = [];
   try {
     const commentService = new CommentService();
-    const { content } = req.query;
-    if (content) {
-      comments = await commentService.findByContent(content);
-    } else {
-      comments = await commentService.comment();
-    }
+    comments = await commentService.comment(req.params.movie_id);
   } catch (error) {
     console.log(error);
     return next(
@@ -65,7 +60,9 @@ exports.updateComment = async (req, res, next) => {
 exports.deleteComment = async (req, res, next) => {
   try {
     const commentService = new CommentService();
-    const commentDeleted = await commentService.deleteComment(req.params.comment_id);
+    const commentDeleted = await commentService.deleteComment(
+      req.params.comment_id
+    );
     if (!commentDeleted) {
       return next(new ApiError(400, "Comment not found"));
     }
@@ -75,7 +72,10 @@ exports.deleteComment = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     return next(
-      new ApiError(500, `Error deleting Comment with id=${req.params.comment_id}`)
+      new ApiError(
+        500,
+        `Error deleting Comment with id=${req.params.comment_id}`
+      )
     );
   }
 };

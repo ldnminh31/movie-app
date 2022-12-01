@@ -86,7 +86,7 @@ exports.updateCategory = async (req, res, next) => {
 exports.deleteCategory = async (req, res, next) => {
     try {
       const categoryService = new CategoryService();
-      const categoryDeleted = await categoryService.deleteCategory(req.params.category_id);
+      const categoryDeleted = await categoryService.deleteCategory(Number(req.params.category_id));
       if (!categoryDeleted) {
         return next(new ApiError(400, "Category not found"));
       }

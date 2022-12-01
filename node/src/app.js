@@ -4,7 +4,7 @@ const app = express();
 const movieController = require("./controllers/movie.controller");
 const accountController = require("./controllers/account.controller");
 const categoryController = require("./controllers/category.controller");
-const commentController = require("./controllers/comment.controller")
+const commentController = require("./controllers/comment.controller");
 
 const ApiError = require("./api-error");
 
@@ -16,11 +16,9 @@ app.get("/", (req, res) => {
   });
 });
 // user api
-app.route("/api/auth/signin").post(accountController.signIn);
+app.route("/api/account/signin").post(accountController.signIn);
 
-app.route("/api/auth/signup").post(accountController.signUp);
-
-app.route("/api/auth/signout").post(accountController.signOut);
+app.route("/api/account/signup").post(accountController.signUp);
 
 // movie api
 app.route("/api/movie").get(movieController.all).post(movieController.addMovie);
@@ -28,9 +26,10 @@ app.route("/api/movie").get(movieController.all).post(movieController.addMovie);
 app
   .route("/api/movie/:movie_id")
   .get(movieController.findMovieId)
+  //.get(movieController.findMovieName)
   .put(movieController.updateMovie)
   .delete(movieController.deleteMovie);
-
+app.route("/api/movie/search/:movie_name").get(movieController.findMovieName);
 // category api
 app
   .route("/api/category")
@@ -44,10 +43,9 @@ app
   .delete(categoryController.deleteCategory);
 
 // comment api
-app
-  .route("/api/comment")
-  .get(commentController.comment)
-  .post(commentController.addComment);
+app.route("/api/comments/:movie_id").get(commentController.comment);
+
+app.route("/api/comment").post(commentController.addComment);
 
 app
   .route("/api/comment/:comment_id")
