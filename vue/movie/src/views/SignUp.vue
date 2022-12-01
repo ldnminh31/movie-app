@@ -1,24 +1,20 @@
 <template>
-  <NavBarVue></NavBarVue>
+  <!-- <NavBarVue></NavBarVue> -->
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-4"></div>
       <div class="col-md-4">
-        <form action="">
+        <form @submit.prevent="signup">
           <h1>Sign Up</h1>
           <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label"
-              >Email address</label
-            >
+            <label for="username" class="form-label">Username</label>
             <input
-              type="email"
+              type="text"
               class="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
+              id="username"
+              v-model="account.username"
+              required
             />
-            <div id="emailHelp" class="form-text">
-              We'll never share your email with anyone else.
-            </div>
           </div>
           <div class="mb-3">
             <label for="exampleInputPassword1" class="form-label"
@@ -28,15 +24,18 @@
               type="password"
               class="form-control"
               id="exampleInputPassword1"
+              v-model="account.password"
+              required
             />
           </div>
           <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Phone</label>
+            <label for="phone" class="form-label">Phone</label>
             <input
-              type="email"
+              type="text"
               class="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
+              id="phone"
+              v-model="account.phone"
+              required
             />
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
@@ -55,10 +54,32 @@
   </div>
 </template>
 <script>
-import NavBarVue from "@/components/NavBar.vue";
+// import NavBarVue from "@/components/NavBar.vue";
+import AccountService from "@/services/account.service";
 export default {
   components: {
-    NavBarVue,
+    // NavBarVue,
+  },
+  name: "SignIn",
+  data() {
+    return {
+      account: {
+        username: "",
+        password: "",
+        phone: "",
+        role: 1,
+      },
+    };
+  },
+  methods: {
+    async signup() {
+      const accountService = new AccountService();
+      const data = await accountService.signUp(this.account);
+      if (data.message === "Create successfully") {
+        alert("Register successfully!");
+        this.$router.push({ name: "movieapp" });
+      }
+    },
   },
 };
 </script>

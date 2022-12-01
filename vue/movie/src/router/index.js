@@ -2,8 +2,10 @@ import { createWebHistory, createRouter } from "vue-router";
 import MovieApp from "@/views/MovieApp.vue";
 import SignUp from "@/views/SignUp.vue";
 import SignIn from "@/views/SignIn.vue";
-import MoviePage from "@/views/MoviePage.vue";
-import Category from "@/views/Category.vue"
+import MovieDetail from "@/views/MovieDetail.vue";
+import MovieHandleVue from "@/views/MovieHandle.vue";
+import Category from "@/views/Category.vue";
+// import { parse } from "path";
 // import { movieService } from "@/services/movie.service";
 
 const routes = [
@@ -24,8 +26,16 @@ const routes = [
   },
   {
     path: "/movie",
+    name: "moviehandle",
+    component: MovieHandleVue,
+  },
+  {
+    path: "/movie/:id",
     name: "movie",
-    component: MoviePage,
+    component: MovieDetail,
+    props: (route) => ({
+      id: parseInt(route.params.id),
+    }),
   },
   {
     path: "/category",

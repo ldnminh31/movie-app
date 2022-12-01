@@ -2,10 +2,7 @@
   <div class="container">
     <nav
       class="navbar navbar-expand-lg fixed-top shadow"
-      style="
-        /* box-shadow: 0 1rem 1rem rgba(0, 0, 0.15, 0.15); */
-        background-color: #eb6440;
-      "
+      style="background-color: #eb6440"
     >
       <div class="container" style="background-color: #eb6440">
         <a class="navbar-brand" href="#" style="background-color: #eb6440">
@@ -21,6 +18,7 @@
             </h1>
           </router-link></a
         >
+
         <button
           class="navbar-toggler"
           type="button"
@@ -32,12 +30,14 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
+
         <div
           class="collapse navbar-collapse"
           id="navbarSupportedContent"
           style="background-color: #eb6440"
         >
           <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="">
+            <!-- home -->
             <li class="nav-item">
               <a
                 class="nav-link active"
@@ -49,13 +49,15 @@
                   class="nav-link active"
                   style="
                     font-size: 1.1rem;
-                    color: #EFF5F5;
+                    color: #eff5f5;
                     background-color: #eb6440;
                   "
                   >Home</router-link
                 ></a
               >
             </li>
+
+            <!-- category -->
             <li class="nav-item">
               <a
                 class="nav-link active"
@@ -67,51 +69,77 @@
                   class="nav-link active"
                   style="
                     font-size: 1.1rem;
-                    color: #EFF5F5;
+                    color: #eff5f5;
                     background-color: #eb6440;
                   "
                   >Category</router-link
                 ></a
               >
             </li>
-
-            <!-- <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              Dropdown
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </li> -->
+            <!-- movie -->
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="#"
+                style="background-color: #eb6440"
+                ><router-link
+                  to="/movie"
+                  class="nav-link active"
+                  style="
+                    font-size: 1.1rem;
+                    color: #eff5f5;
+                    background-color: #eb6440;
+                  "
+                  >Movie</router-link
+                ></a
+              >
+            </li>
           </ul>
-          <!-- <form class="d-flex" role="search">
-          <input
-            class="form-control me-2"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-          />
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form> -->
-          <router-link to="/signin" style="background-color: #eb6440"
+
+          <router-link
+            to="/signin"
+            style="background-color: #eb6440"
+            v-if="this.mainStore.username == null"
             ><button class="display-flex button-style">
               Sign in
             </button></router-link
           >
+
+          <button 
+            class="btn display-flex"
+            style="background-color: #eff5f5"         
+            v-else
+            @click="signOut()"
+          >
+            Sign out
+          </button>
         </div>
       </div>
     </nav>
   </div>
 </template>
+
+<script>
+import { useMainStore } from "@/store";
+export default {
+  name: "NavBar",
+  setup() {
+    const mainStore = useMainStore();
+    return { mainStore };
+  },
+  methods: {
+    signOut() {
+      this.mainStore.$state = {
+        user_id: null,
+        username: null,
+        role: null,
+      };
+      this.$router.push({ name: "movieapp" });
+    },
+  },
+};
+</script>
 
 <!-- style -->
 <style>
@@ -124,4 +152,8 @@
   color: #fff;
   background-color: #497174;
 }
+.button-style-2:hover{
+  background-color: green;
+}
+
 </style>
